@@ -1,0 +1,182 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\DefineNamedColor{named}{socodingblue}    {rgb}{0.296875,0.421875,0.69921875}
+
+\mode<presentation>
+\setbeamercolor*{palette primary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette secondary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette tertiary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette quaternary}{bg=socodingblue,fg=white}
+\setbeamercolor*{structure}{fg=socodingblue,bg=white}
+\setbeamercolor{frametitle}{bg=socodingblue,fg=white}
+\mode<all>
+
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{倍增}
+\subtitle{区间最值问题、最近公共祖先}
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{目录}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+% -----------------------------------------------------------------------------
+
+\frame{\titlepage}
+
+%\section[目录]{}
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{倍增}
+
+倍增，读音 bèi zēng，汉语词语，意思为成倍增加。
+
+~\\
+
+解释：
+
+\begin{itemize}
+  \item 成倍增加。
+  \item 变为两倍大。
+  \item 增加一倍以上。
+\end{itemize}
+
+~\\
+
+\begin{description}
+  \item[使线性的处理转化为对数级的处理，大大地优化时间复杂度。] 
+\end{description}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{区间最值问题}
+\begin{frame}{引入}
+
+$$a=[1,1,4,5,1,4]$$
+
+\begin{itemize}
+  \item $\max_{i=2}^{2}a_i$
+  \item $\max_{i=2}^{5}a_i$
+  \item $\max(\max_{i=2}^{3}a_i,\max_{i=4}^{5}a_i)$
+  \item $\max(\max_{i=2}^{4}a_i,\max_{i=3}^{5}a_i)$
+\end{itemize}
+
+\begin{block}{可重复贡献}
+$\max(x,x)=x$。即使用来求解的预处理区间有重叠部分，只要这些区间的并是所求的区间，最终计算出的答案就是正确的。
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{预处理}
+
+\begin{itemize}
+  \item 预处理所有长度为 $2^x \ (x=0,1,2,3,...)$ 的连续区间。
+  \item $dp_{i,j}$ 表示从 $i$ 开始 $2^j$ 个数的最大值。
+  \item 显然 $dp_{i,0}=a_i$。
+\end{itemize}
+
+\begin{description}
+ \item \begin{block}{状态转移方程}
+$$dp_{i,j}=\max(dp_{i,j-1},dp_{i+2^{j-1},j-1})$$ 
+\end{block}
+\end{description}
+
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{查询}
+
+求 $\max_{i=L}^{R}a_i$ 的值。
+
+~\\
+
+\begin{itemize}
+  \item 用预处理过的区间覆盖 $[L,R]$。
+  \item $[L,L+2^s-1],[R-2^s+1,R]$.
+  \item $s=\left \lfloor\log_2(R-L+1)\right \rfloor$.
+\end{itemize}
+
+\begin{block}{为什么？}
+  \begin{itemize}
+    \item $2^{\left \lfloor\log_2(R-L+1)\right \rfloor}$ 到底有多长？
+    \item 如果是它的两倍，$2^{\left \lfloor\log_2(R-L+1)\right \rfloor + 1}$呢？
+  \end{itemize}
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{代码实现}
+
+关于实现的细节：
+
+~\\
+
+\begin{itemize}
+  \item $\lfloor \log_{2}i \rfloor = \lfloor  \log_{2} \lfloor \frac{i}{2} \rfloor \rfloor +1$
+  \item $f_{i,j}$ 初始化？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{其他应用}
+
+\begin{itemize}
+  \item 区间按位与：$x \ \& \ x = x$
+  \item 区间按位或：$x \ | \ x = x$
+  \item 区间 GCD：$gcd(x,x)=x$
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+\end{document}
