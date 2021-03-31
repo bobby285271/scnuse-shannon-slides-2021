@@ -179,4 +179,90 @@ $$dp_{i,j}=\max(dp_{i,j-1},dp_{i+2^{j-1},j-1})$$
 \end{frame}
 
 % -----------------------------------------------------------------------------
+
+\section{最近公共祖先}
+\begin{frame}{基本概念}
+
+\begin{itemize}
+  \item \textbf{树}：\textit{$n$ 个结点，$n-1$ 条边的连通无向图，任意两个结点之间有且仅有一条简单路径。}
+  \item \textbf{深度}：\textit{到根结点的路径上的边数（怎么求？）。}
+  \item \textbf{父亲}：\textit{对于除根以外的每个结点，定义为从该结点到根路径上的第二个结点。根结点没有父结点。}
+  \item \textbf{祖先}：\textit{一个结点到根结点的路径上，除了它本身外的结点。}
+\end{itemize}
+
+\begin{block}{包括它本身？}
+\begin{itemize}
+  \item 算法导论第十二章 12.2-6：每个结点都是它自己的祖先。
+\end{itemize} 
+\end{block}
+
+\begin{itemize}
+  \item \begin{description}
+  \item[\textbf{两个节点的 LCA}：\textit{两个点的公共祖先里面，离根最远的那个。}] 
+\end{description}
+
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{朴素算法}
+
+在两个点相遇之前...
+
+~\\
+
+\begin{itemize}
+  \item 找深度比较大的点。
+  \item 往上跳一步。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{倍增算法}
+
+\begin{itemize}
+  \item 怎么利用倍增性质？
+  \item 怎么确保两个点相遇？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{预处理}
+
+\begin{itemize}
+  \item 节点的深度：DFS.
+  \item $fa_{x,y}$ 表示节点 $x$ 往上跳 $2^y$ 步到达的节点。
+\end{itemize}
+
+\begin{block}{先跳 $2^{y}$ 步再跳 $2^{y}$ 步...}
+$$fa_{x,y} = fa_{fa_{x,y-1},y-1}$$
+\end{block}
+
+\begin{itemize}
+  \item 只要是没有跳出这颗树就一直预处理。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{查询}
+\begin{itemize}
+  \item 俩节点的深度相差多少？
+  \item 怎么利用预处理的数据快速跳？
+  \item 十进制转二进制有什么作用？
+  \item 不知道跳到哪里怎么确定目标？
+  \item 怎么个试探法？
+  \item 为什么肯定会试探出来？
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
 \end{document}
