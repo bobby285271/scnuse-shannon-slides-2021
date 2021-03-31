@@ -240,7 +240,7 @@ $$dp_{i,j}=\max(dp_{i,j-1},dp_{i+2^{j-1},j-1})$$
   \item $fa_{x,y}$ 表示节点 $x$ 往上跳 $2^y$ 步到达的节点。
 \end{itemize}
 
-\begin{block}{先跳 $2^{y}$ 步再跳 $2^{y}$ 步...}
+\begin{block}{先跳 $2^{y-1}$ 步再跳 $2^{y-1}$ 步...}
 $$fa_{x,y} = fa_{fa_{x,y-1},y-1}$$
 \end{block}
 
