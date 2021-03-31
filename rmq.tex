@@ -1,0 +1,397 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{题目分享（一）}
+\subtitle{顺便线段树、单调栈扫盲}
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{目录}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+% -----------------------------------------------------------------------------
+
+\frame{\titlepage}
+
+%\section[目录]{}
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{解决什么问题}
+\begin{itemize}
+  \item 线段树：给定区间求最值.
+  \item 单调栈：给定最值求区间.
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{线段树}
+\begin{frame}{是老问题了}
+
+\begin{block}{维护一个数组 $(0 \leq a_i \leq 10^9)$，实现下面的操作：}
+\begin{itemize}
+  \item 将 $a_i$ 设置为 $v$。
+  \item 求 $\sum_{i=L}^{R}\sum_{j=L}^{i}a_{i}a_{j}$ 的值，对 $10^9+7$ 取模输出。
+\end{itemize}
+
+\end{block}
+
+\begin{itemize}
+  \item 如果数组大小和操作次数 $1 \leq n,q \leq 100$？
+  \item （2020 SCNUCS-N）如果数组大小和操作次数 $1 \leq n,q \leq 5 \times 10^5$？
+  \item 如果不考虑修改？我们就来实现一下查询？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{稍微变一下}
+
+\begin{block}{维护一个数组 $(0 \leq a_i \leq 10^9)$，实现下面的操作：}
+\begin{itemize}
+  \item 将 $a_i$ 设置为 $v$。
+  \item 求 $\max_{i=L}^{R}a_i$ 的值。
+\end{itemize}
+
+\end{block}
+
+\begin{itemize}
+  \item 如果数组大小和操作次数 $1 \leq n,q \leq 100$？
+  \item 如果数组大小和操作次数 $1 \leq n,q \leq 10^5$？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{如何预处理？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{如何预处理？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.21]{figures/build.png}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{如何预处理？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.21]{figures/buildcode.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{如何查询？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{如何查询？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.20]{figures/query.png}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{如何查询？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.25]{figures/querycode.png}
+  \end{center}
+\end{figure}
+
+\begin{description}
+  \item \begin{block}{把这个收录到我的模板里，比赛时直接照搬，会有什么隐患吗？}
+\begin{itemize}
+  \item 考虑 $a_i$ 都为负数时 $res$ 的初始值。
+\end{itemize}
+\end{block}
+\end{description}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{单点更新？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{单点更新？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.20]{figures/update.png}
+  \end{center}
+\end{figure}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.19]{figures/seg.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{单点更新？}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.20]{figures/updatecode.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+
+\section{单调栈}
+\begin{frame}{AK 杯前应该做过吧...}
+
+
+
+\begin{block}{小鱼比可爱}
+人比人，气死人；鱼比鱼，难死鱼。小鱼最近参加了一个“比可爱”比赛，比的是每只鱼的可爱程度。参赛的鱼被从左到右排成一排，头都朝向左边，然后每只鱼会得到一个整数数值，表示这只鱼的可爱程度，很显然整数越大，表示这只鱼越可爱，而且任意两只鱼的可爱程度可能一样。由于所有的鱼头都朝向左边，所以每只鱼只能看见在它左边的鱼的可爱程度，它们心里都在计算，在自己的眼力范围内有多少只鱼不如自己可爱呢。请你帮这些可爱但是鱼脑不够用的小鱼们计算一下。
+\end{block}
+
+\begin{itemize}
+  \item （洛谷 P1428）如果鱼的数量 $1 \leq n \leq 100$。
+  \item 如果鱼的数量 $1 \leq n \leq 10^5$。
+  \begin{itemize}
+    \item 逆序对 - 归并排序 / 树状数组
+  \end{itemize}
+  \item 那如果现在我比身高而不是比可爱呢？$ 1 \leq n \leq 100$。
+  \item 还是比身高，$1 \leq n \leq 10^5$。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{小鱼比身高}
+
+$$[1,1,4,5,1,4,1,1,4,5,1,4]$$
+
+\begin{itemize}
+  \item 在 $h_3$ 出现后，$h_1,h_2$ 就没有用处了。
+  \item 在 $h_4$ 出现后，$h_3$ 也没有用处了。
+  \item 在 $h_6$ 出现后，$h_5$ 也没有用处了。
+  \item 在 $h_9$ 出现后，$h_7,h_8$ 也没有用处了。
+  \item 在 $h_{10}$ 出现后，$h_6,h_9$ 也没有用处了。
+  \item 在 $h_{12}$ 出现后，$h_{11}$ 也没有用处了。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{利用价值}
+
+$$[1,1,4,5,1,4,1,1,4,5,1,4]$$
+
+\begin{itemize}
+  \item 为什么失去了利用价值？
+  \item 不可能影响 $c_i$ 的计算。
+  \item 不再可能成为第一个 $ \geq h_i$ 的数。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{实现}
+
+\begin{itemize}
+  \item 怎么知道哪些数还有价值？
+\end{itemize}
+
+\begin{block}{实现}
+\begin{itemize}
+  \item 比新出现的数小的数统统弹栈。
+  \item 新出现的数入栈，同时得到答案。
+\end{itemize}
+\end{block}
+
+
+\begin{itemize}
+  \item 为什么会满足单调性？
+  \item 怎么得到答案？
+  \item 为什么不是小于等于？
+  \item 时间复杂度？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{实现}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.22]{figures/stack.png}
+  \end{center}
+\end{figure}
+
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{简单应用}
+\begin{frame}{题目}
+
+（2021 牛客寒假多校 2A）对于一个数组，定义 $RMQ(L,R)$ 是数组下标区间 $[L,R]$ 的最大值。\\
+
+~\\
+
+
+现在给定长度为 $n \ (1 \leq n \leq 10^5)$ 的全排列数组 $a[ ] \ (1 \leq a_i \leq n)$，接下来有 $m \ (1\leq m \leq 2 \times 10^5)$ 次询问。\\
+
+~\\
+
+每次询问中，给定 $k \ (1 \leq k \leq 10^5)$ 个不同的数 $p[ ] \ (1 \leq p_i \leq n)$，你可以从中有放回地随机抽取两个数 $p_x, p_y$，不妨设 $p_x \leq p_y$。\\
+
+~\\
+
+现在问你对于 $a[]$，$RMQ(p_x,p_y)$ 有哪几种情况，这些情况出现的概率各是多大。\\
+
+~\\
+
+数据保证 $\sum k \leq 2 \times 10^5$。
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{思路}
+
+现在假设 $p[]$ 已经从小到大排序过了，可能成为 $RMQ(p_x,p_y)$ 的数就只有下面两类数：
+
+\begin{itemize}
+  \item 如果两次抽取的下标相同：$a_{p_{1}}$, $a_{p_{2}}$, $a_{p_{3}}$, ..., $a_{p_{i}}$, ..., $a_{p_{k}}$。
+  \item 如果两次抽取的下标不相同：$RMQ(p_1,p_2)$, $RMQ(p_2,p_3)$, $RMQ(p_3,p_4)$, ..., $RMQ(p_i,p_{i+1})$, ..., $RMQ(p_{k-1},p_{k})$。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\begin{frame}{思路}
+
+\begin{figure}
+    \begin{center}
+      \includegraphics[scale=0.17]{figures/prob.png}
+    \end{center}
+  \end{figure}
+
+\begin{itemize}
+  \item 对于数 $a_i$，$L$ 和 $R$ 取到什么位置会有 $RMQ(L,R)=a_i$？
+  \item 如何计算对答案的贡献？
+  \item 考虑 $RMQ(p_{i-1},p_{i})=RMQ(p_i,p_{i+1})$ 的情况？
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\end{document}
