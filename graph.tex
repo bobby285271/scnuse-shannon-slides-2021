@@ -1,0 +1,677 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{图论基础}
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{目录}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+% -----------------------------------------------------------------------------
+
+\frame{\titlepage}
+
+%\section[目录]{}
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{学期计划}
+\begin{frame}
+\frametitle{学期计划}
+\begin{itemize}
+  \item {授课：}
+  \begin{itemize}
+    \item {图论基础。}
+    \item {搜索基础 or 动态规划基础。}
+    \item {...}
+  \end{itemize}
+  \item {比赛：}
+  \begin{itemize}
+    \item {GPLT 选拔 / 蓝桥杯热身赛。}
+    \item {*CPC 集训队选拔赛。}
+    \item {...}
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{自学参考}
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.21]{figures/cu.jpg}
+  \end{center}
+\end{figure}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{图论相关概念}
+\begin{frame}{基本概念}
+
+\begin{block}{资源}
+OI Wiki: https://oi-wiki.org/graph/concept/
+\end{block}
+
+\begin{itemize}
+  \item 图：二元组 $G(V(G),E(G))$。
+  \item 有向图、无向图；出度、入度；自环、重边。
+  \item 简单图：没有自环与重边。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{路径}
+$$
+v_0, e_1, v_1, e_2, v_2, \ldots, e_k, v_k
+$$ 
+$$
+v_0 \to v_1 \to v_2 \to \cdots \to v_k
+$$
+\begin{itemize}
+  \item 迹：$e_1,e_2,\ldots ,e_k$ 两两不相同的链。
+  \item 路径：只有 $v_0$ 和 $v_k$ 可以相同，其余点两两互不相同的迹。
+  \item 回路：$v_0=v_k$ 的迹。
+  \item 环：$v_0=v_k$ 的路径。
+  
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{连通}
+
+\begin{itemize}
+  \item 连通 / 可达：存在一条途径。
+  \item 连通图：无向图任意两点连通。
+  \item 强连通：有向图的节点两两互相可达。
+  \item 弱连通：有向边替换为无向边得到连通图。
+  \item 连通块 / 连通分量：极大连通子图。
+  
+\end{itemize}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{图的存储}
+\begin{frame}[fragile]
+\frametitle{邻接表}
+
+\begin{block}{常见的输入格式}
+第一行两个整数 $n$ 和 $m$，其中 $n$ 表示点的数量，$m$ 表示边的数量。 \\
+接下来 $m$ 行，每行两个整数 $u$ 和 $v$，表示 $u$ 到 $v$ 有一条边。
+\end{block}
+
+\lstset{language=C++}
+\begin{lstlisting}
+vector<int> G[MAXN];
+for (i = 1; i <= m; i++) {
+    cin >> u >> v;
+    G[u].push_back(v);
+    // G[v].push_back(u);
+}
+\end{lstlisting}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{邻接表}
+\begin{block}{常见的输入格式}
+第一行两个整数 $n$ 和 $m$，其中 $n$ 表示点的数量，$m$ 表示边的数量。 \\
+接下来 $m$ 行，每行三个整数 $u$，$v$ 和 $w$，表示 $u$ 到 $v$ 有一条边权为 $w$ 的边。
+\end{block}
+
+\lstset{language=C++}
+\begin{lstlisting}
+vector<pair<int,int>> G[MAXN];
+for (i = 1; i <= m; i++) {
+    cin >> u >> v >> w;
+    G[u].push_back(make_pair(v, w));
+    // G[v].push_back(make_pair(u, w));
+}
+
+\end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{邻接矩阵}
+
+只适用于没有重边的情况。
+
+\lstset{language=C++}
+\begin{lstlisting}
+int G[MAXN][MAXN];
+
+for (i = 1; i <= m; i++) {
+    cin >> u >> v >> w;
+    G[u][v] = w;
+}
+
+\end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{直接存边}
+
+一般不用于遍历图。
+
+\lstset{language=C++}
+\begin{lstlisting}
+struct edge {
+    int start, to, val;
+} e[MAXN];
+
+for (i = 1; i <= m; i++) {
+    cin >> e[i].start >> e[i].to >> e[i].val;
+}
+
+\end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{图的遍历}
+\begin{frame}[fragile]
+\frametitle{DFS}
+
+\lstset{language=C++}
+\begin{lstlisting}
+void dfs(int x) {
+    vis[x] = 1;
+    for (int i : G[x]) {
+        if(!vis[i]) dfs(i);
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{树的直径}
+
+图中所有最短路径的最大值即为「直径」，可用 $O(n)$ 求出。
+
+\begin{itemize}
+  \item 对任意一个结点做 DFS 求出最远的结点，到达的结点一定是直径的一端。
+  \item 以这个结点为根结点再做 DFS 到达另一个最远结点，到达的结点一定是直径的另一端。
+\end{itemize}
+
+\begin{block}{参考代码}
+https://paste.ubuntu.com/p/x7gM6xT7sp/
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{BFS}
+
+\lstset{language=C++}
+\begin{lstlisting}
+void bfs(int x) {
+    queue<int> q;
+    q.push(x);
+    vis[x] = 1;
+    while (!q.empty()) {
+        u = q.front();
+        q.pop();
+        for (int i : G[u]) {
+            if (!vis[i]) {
+                q.push(i);
+                vis[i] = 1;
+            }
+        }
+    }
+}
+\end{lstlisting}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{拓扑排序}
+
+将有向无环图顶点以线性方式进行排序，使得对于任何的顶点 $u$ 到 $v$ 的有向边 $(u,v)$, 都可以有 $u$ 在 $v$ 的前面。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.8]{figures/topo.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{拓扑排序}
+
+2 → 8 → 0 → 3 → 7 → 1 → 5 → 6 → 9 → 4 → 11 → 10 → 12。
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.8]{figures/topo.png}
+  \end{center}
+\end{figure}
+
+
+\begin{block}{参考代码}
+https://paste.ubuntu.com/p/vdw79fQGYh/
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{来口胡一些题}
+
+\textit{树，即没有自环、重边和回路的无向连通图。}
+
+~\\
+
+（2021 牛客寒假多校）给一棵 $n$ 节点树，给每个顶点染成红色或蓝色。
+要求每个红点周围有且仅有一个红点，每个蓝点周围有且仅有一个蓝点。
+“周围”的定义：某点周围的点指通过邻边直接连接的点。
+
+\begin{itemize}
+  \item $1 \leq n \leq 10^5$
+\end{itemize}
+
+\begin{block}{参考思路}
+\begin{itemize}
+  \item 叶子节点：与父亲节点同色。
+  \item 不是叶子但未上色：与父亲节点同色。
+  \item 点被多次标记：无解。
+  \item 代码：https://paste.ubuntu.com/p/TGxVcSW35F/
+\end{itemize}
+
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{来口胡一些题}
+
+（2020 ICPC 济南）有一棵 $n$ 节点树，请你构造节点数据使图正好为这棵树（节点之间有边仅这二个节点的「按位或」等于 $2^{60}-1$）。
+
+你需要保证节点数据 $0 \leq a_i < 2^{60}$。
+
+\begin{itemize}
+  \item $1 \leq n \leq 100$
+\end{itemize}
+
+\begin{block}{参考思路}
+\begin{itemize}
+  \item 白色：最高位为 $0$，白色编号的位为 $0$，其余位为 $1$.
+  \item 黑色：最高位为 $1$，相邻白色的编号的位为 $1$，其余位为 $0$.
+  \item 代码：https://paste.ubuntu.com/p/M8PtmDrvkx/
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{二分图}
+
+节点由两个集合组成，且两个集合内部没有边的图。
+
+\begin{itemize}
+  \item 如果两个集合中的点分别染成黑色和白色，可以发现二分图中的每一条边都一定是连接一个黑色点和一个白色点。
+  \item 二分图不存在长度为奇数的环。
+\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{来口胡一些题}
+
+（2019 ICPC 上海）$n$ 个点和 $m$ 条无向边的简单图，让你删掉一些边，让剩余的边不存在奇环，求剩余的边的最大值。
+
+\begin{itemize}
+  \item $2 \leq n \leq 16$
+  \item $1 \leq m \leq \frac{n(n-1)}{2}$
+\end{itemize}
+
+\begin{block}{参考思路}
+\begin{itemize}
+  \item 选择尽可能多的边使得该图是二分图.
+  \item 二进制进行枚举.
+  \item 代码：https://paste.ubuntu.com/p/jgKyczfZCt/
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{单源最短路}
+\begin{frame}[fragile]
+\frametitle{Floyd}
+
+求任意两个结点之间的最短路，适用于任何图（但最短路必须要存在）。\\
+
+$dp_{k,x,y}$ 表示只允许经过结点 $1$ 到 $k$，结点 $x$ 到结点 $y$ 的最短路长度。\\
+
+$$
+dp_{k,x,y} = \min(dp_{k-1,x,y}, dp_{k-1,x,k}+dp_{k-1,k,y})
+$$
+
+第一维对结果无影响（为什么？）。
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\begin{frame}[fragile]
+\frametitle{Floyd}
+
+$dp_{x,y}$ 表示结点 $x$ 到结点 $y$ 的最短路长度。\\
+
+$$
+dp_{x,y} = \min(dp_{x,y}, dp_{x,k}+dp_{k,y})
+$$
+
+\lstset{language=C++}
+\begin{lstlisting}
+for (k = 1; k <= n; k++) {
+    for (i = 1; i <= n; i++) {
+        for (j = 1; j <= n; j++) {
+            f[i][j] = min(f[i][j], f[i][k] + f[k][j]);
+        }
+    }
+}
+\end{lstlisting}
+
+\begin{block}{特点}
+可求多源最短路，时间复杂度 $O(n^3)$，适用场景：无负环。
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Bellman Ford}
+
+$dis_i$ 表示结点 $S$ 到 $i$ 的最短路径长度。\\
+
+每一次的循环至少可以确定一个点的最短路。
+
+\lstset{language=C++}
+\begin{lstlisting}
+
+for (i = 1; i <= n; i++) {
+    for (j = 1; j <= m; j++) {
+        // 三角形不等式
+        dis[e[j].to] = min(dis[e[j].to],
+                           dis[e[j].start] + e[j].val);
+    }
+}
+
+\end{lstlisting}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Bellman Ford}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.4]{figures/bellman.png}
+  \end{center}
+\end{figure}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Bellman Ford}
+
+\begin{itemize}
+  \item 问：如何判断是否有负环？
+  \item 答：如果有个点被松弛成功了 $n$ 次，那么就一定存在负环。
+\end{itemize}
+
+\begin{block}{特点}
+时间复杂度 $O(nm)$，适用场景：有边数限制。\\
+// 关于 SPFA，是死是活我也不知道。
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Dijkstra}
+
+只适用于非负权图。
+
+将结点分成两个集合：已确定最短路长度的，未确定的。\\
+
+一开始第一个集合里只有 $S$，然后重复这些操作，直到第二个集合为空。\\
+
+\begin{itemize}
+  \item 对那些刚刚被加入第一个集合的结点的所有出边执行松弛操作。
+  \item 从第二个集合中，选取一个最短路长度最小的结点，移到第一个集合中。
+\end{itemize}
+
+\end{frame}
+
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Dijkstra}
+
+
+\lstset{language=C++}
+\begin{lstlisting}
+
+for (i = 0; i < n; i++) {
+    t = -1;
+    for (j = 1; j <= n; j++) {
+        if (!st[j] && (t == -1 || dis[t] > dis[j])) {
+            t = j;
+        }
+    }           
+    st[t] = true; 
+    for (auto j : G[t]) {
+        dis[j.first] = min(dis[j.first],
+                           dis[t] + j.second);
+    }
+}
+
+\end{lstlisting}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Dijkstra}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.4]{figures/dij.png}
+  \end{center}
+\end{figure}
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Dijkstra}
+
+通过小根堆来找到当前堆中距离起点最短且没有确定最短路的那个点。
+
+\lstset{language=C++}
+\begin{lstlisting}
+
+typedef pair<int, int> pii;
+priority_queue<pii, vector<pii>, greater<pii>> heap;
+
+\end{lstlisting}
+
+\begin{block}{特点}
+时间复杂度 $O(m \log n)$，适用场景：所有边权都是正数。
+\end{block}
+
+\begin{block}{参考代码}
+https://paste.ubuntu.com/p/CG9kCcBRtH/
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{最小生成树}
+\begin{frame}[fragile]
+\frametitle{Prim}
+
+\textit{用最小的代价用 $n-1$ 条边连接 $n$ 个点。}
+
+~\\
+
+将结点分成两个集合：已经加入生成树的，未加入的。\\
+
+一开始第一个集合里只有 $1$，然后重复这些操作，直到第二个集合为空。\\
+
+\begin{itemize}
+  \item 对那些刚刚被加入第一个集合的结点的所有出边执行松弛操作。
+  \item 从第二个集合中，选取一个\textbf{距离生成树最小}的结点，移到第一个集合中。
+\end{itemize}
+
+\begin{block}{参考代码}
+https://paste.ubuntu.com/p/cwdqs9fDPC/
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Prim}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.5]{figures/prim.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Kruskal}
+
+按边权从小到大将所有边排序，按顺序枚举边：
+
+\begin{itemize}
+  \item 若两个端点不在同一个并查集，则合并后将边加入生成树。
+\end{itemize}
+
+\begin{block}{参考代码}
+https://paste.ubuntu.com/p/bGsH8RPQvW/
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{Kruskal}
+
+\begin{figure}
+  \begin{center}
+    \includegraphics[scale=0.5]{figures/prim.png}
+  \end{center}
+\end{figure}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}[fragile]
+\frametitle{来口胡一些题}
+
+（2019 ICPC 南昌）一张无向图，每条边有一个权值和一个颜色（黑色 or 白色）。
+
+最多选 $k$ 条白边，黑色边数量不限，问在保证选出的边让图联通的情况下，边取值和最大。
+
+\begin{block}{参考思路}
+\begin{itemize}
+  \item 黑边全选。
+  \item 白边跑最长路。
+\end{itemize}
+\end{block}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\end{document}
