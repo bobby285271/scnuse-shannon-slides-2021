@@ -1,0 +1,233 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\DefineNamedColor{named}{socodingblue}    {rgb}{0.296875,0.421875,0.69921875}
+
+\mode<presentation>
+\setbeamercolor*{palette primary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette secondary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette tertiary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette quaternary}{bg=socodingblue,fg=white}
+\setbeamercolor*{structure}{fg=socodingblue,bg=white}
+\setbeamercolor{frametitle}{bg=socodingblue,fg=white}
+\mode<all>
+
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+  \end{beamercolorbox}
+  \begin{beamercolorbox}{section in head/foot}
+    \vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+  \end{beamercolorbox}%
+  \begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{平面计算几何基础}
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{目录}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+% -----------------------------------------------------------------------------
+
+\frame{\titlepage}
+
+%\section[目录]{}
+\begin{frame}{目录}
+  \tableofcontents
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{点线关系}
+\begin{frame}{从熟悉的开始}
+	
+	$$ax+by+c=0$$
+	$$(x_0,y_0)$$
+	
+	\begin{itemize}
+		\item $b \neq 0$
+		\item $y=-\frac{a}{b}x-\frac{c}{b}$
+		\item $y_0 > -\frac{a}{b}x_0-\frac{c}{b}$
+		\item $b>0, ax_0+by_0+c>0$
+		\item $b<0$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{点积}
+	\begin{description}
+		\item[只考虑二维平面下的情形...]
+	\end{description}
+	
+	\begin{itemize}
+		\item 求出来是一个数量
+		\item $\boldsymbol{a}=(x_1,y_1)$
+		\item $\boldsymbol{b}=(x_2,y_2)$
+		\item $\boldsymbol{a}\cdot \boldsymbol{b}=x_1x_2+y_1y_2$
+		\item $\boldsymbol{a}\cdot \boldsymbol{b}=|\boldsymbol{a}||\boldsymbol{b}|\cos\theta$
+		\item 投影相乘
+	\end{itemize}
+
+	\begin{block}{怎么推的？}
+		\begin{itemize}
+			\item $\boldsymbol{c}=\boldsymbol{a}-\boldsymbol{b}$
+			\item $\boldsymbol{c}^2=\boldsymbol{a}^2+\boldsymbol{b}^2-2|\boldsymbol{a}||\boldsymbol{b}|\cos\theta$
+			\item $(\boldsymbol{a}-\boldsymbol{b})(\boldsymbol{a}-\boldsymbol{b})$
+		\end{itemize}
+	\end{block}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{叉积}
+	\begin{description}
+		\item[只考虑二维平面下的情形...]
+	\end{description}
+	
+	\begin{itemize}
+		\item 求出来是一个向量，方向在 $z$ 轴
+		\item $\boldsymbol{a}=(x_1,y_1)$
+		\item $\boldsymbol{b}=(x_2,y_2)$
+		\item $|\boldsymbol{a}\times \boldsymbol{b}|=|x_1y_2-x_2y_1|$
+		\item $|\boldsymbol{a}\times \boldsymbol{b}|=|\boldsymbol{a}||\boldsymbol{b}|\sin\theta$
+		\item 平行四边形面积
+		\item 右手定则：从 $\boldsymbol{a}$ 以不超过 $180$ 度的转角转向 $\boldsymbol{b}$
+		\item 用数值的正负判断叉乘后向量的方向
+		\item 用数值的正负判断向量位置关系
+	\end{itemize}
+
+	\begin{block}{怎么推的？}
+		\begin{itemize}
+			\item 平方一下？
+		\end{itemize}
+		
+	\end{block}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{方向判断}
+	
+	\begin{block}{举例}
+		\begin{itemize}
+			\item $A(0,0), B(4,0), M(1,2), N(3,4), O(3,-4)$
+		\end{itemize}
+	\end{block}
+	
+	\begin{itemize}
+		\item $\vec{AB}\times \vec{AM}$
+		\item $8$
+		\item $\vec{AB}\times \vec{AN}$
+		\item $16$
+		\item $\vec{AB}\times \vec{AO}$
+		\item $-16$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{代码实现}
+	
+	\begin{block}{来点 C++}
+		结构体、构造函数、重载运算符
+	\end{block}
+	
+	\begin{itemize}
+		\item $P(x,y)$
+		\item 加减、常数乘
+		\item 判等 $eps$
+		\item 模长
+		\item 点积、叉积
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{应用}
+	
+	\begin{description}
+		\item[判断一个点 $P$ 在不在三角形 $ABC$（四个点的坐标已知）？]
+	\end{description}
+	
+	\begin{itemize}
+		\item 面积 $S_{ABP}+S_{ACP}+S_{BCP}=S_{ABC}$ 
+		\item $P,A$在$BC$的同侧、$P,B$在$AC$的同侧、$P,C$在$AB$的同侧
+		\item $\vec{PA}\times \vec{PB}$、$\vec{PB}\times \vec{PC}$、$\vec{PC}\times \vec{PA}$ 同号
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{面积}
+\begin{frame}{从熟悉的开始}
+	
+	\begin{description}
+		\item[给定顶点坐标...]
+	\end{description}
+	
+	\begin{itemize}
+		\item 三角形面积？
+		\item 平行四边形面积？
+		\item 四边形面积？
+		\item 任意凸多边形?
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{任意多边形面积}
+	
+	\begin{description}
+		\item[$n$ 边形，时钟序标号 $A_i(x_i,y_i)$]
+	\end{description}
+	
+	\begin{itemize}
+		\item 还是若干三角形
+		\item $S=\frac{1}{2} |\sum_{i=1}^{n}\left(x_{i} y_{i+1}-x_{i+1} y_{i}\right)|$
+		\item $x_{n+1}=x_1,y_{n+1}=y_1$
+		\item $A_1(3,4),A_2(5,11),A_3(12,8),A_4(9,5),A_5(5,6)$
+		\item $S= 30$
+		\item 数学归纳法
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\end{document}
