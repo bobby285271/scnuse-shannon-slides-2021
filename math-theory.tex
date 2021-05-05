@@ -1,0 +1,177 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\DefineNamedColor{named}{socodingblue}    {rgb}{0.296875,0.421875,0.69921875}
+
+\mode<presentation>
+\setbeamercolor*{palette primary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette secondary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette tertiary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette quaternary}{bg=socodingblue,fg=white}
+\setbeamercolor*{structure}{fg=socodingblue,bg=white}
+\setbeamercolor{frametitle}{bg=socodingblue,fg=white}
+\mode<all>
+
+\setbeamertemplate{headline}
+{%
+	\begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+	\end{beamercolorbox}
+	\begin{beamercolorbox}{section in head/foot}
+		\vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+	\end{beamercolorbox}%
+	\begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+	\end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{数论只会 GCD}
+\subtitle{“这个我也不会证，要么百度要么背结论吧”}
+
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{目录}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+	
+\frame{\titlepage}
+	
+%\section[目录]{}
+\begin{frame}{目录}	
+	\tableofcontents
+\end{frame}
+
+\begin{frame}{声明}	
+	本演示文档可能充斥着各种不严谨甚至是错误的表述，课后请务必参考各种网上资料重新自学一遍有关内容（捂脸）。
+\end{frame}
+	
+% -----------------------------------------------------------------------------
+
+\section{基础知识}
+\begin{frame}{整除}
+	
+	存在整数 $q$ 使得 $b=aq$。
+		
+	\begin{itemize}
+		\item $a \mid b$：$a$ 整除 $b$
+		\item $a \nmid b$：$a$ 不整除 $b$
+	\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{带余除法}
+	
+	给定 $a,b$，一定存在唯一一对 $q,r$（都是整数哈）
+	
+	\begin{itemize}
+		\item $a=bq+r$
+		\item $0 \leq r < |b|$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{整除的性质}
+	
+	都是整数...
+	
+	\begin{itemize}
+		\item $a\mid b$ 且 $b\mid c \Longleftrightarrow a\mid c$
+		\item $a\mid b$ 且 $a \mid c  \Longleftrightarrow$ 对任意 $x,y$ 有 $a\mid bx + cy$
+		\item $m \neq 0$，$a\mid b \Longleftrightarrow ma \mid mb$
+		\item $a\mid b$ 且 $b \mid a \Longrightarrow a=\pm b$ 
+		\item $b\neq 0$ 且 $a \mid b \Longrightarrow |a| \leq |b|$ 
+	\end{itemize}	
+		
+\end{frame}
+	
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{模的性质}
+	
+	\begin{itemize}
+		\item $a \equiv a \pmod m$
+		\item $a \equiv b \pmod m\Longleftrightarrow b \equiv a \pmod m$
+		\item $a \equiv b \pmod m,b \equiv c \pmod m \Longrightarrow a \equiv c \pmod m$
+		\item $a \equiv b \pmod m,c \equiv d \pmod m \Longrightarrow a\pm c \equiv b\pm d \pmod m$
+		\item $a \equiv b \pmod m,c \equiv d \pmod m \Longrightarrow ac \equiv bd \pmod m$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{整除的性质}
+	
+	很熟悉的...
+	
+	\begin{itemize}
+		\item $(a+b) \bmod p = (a\bmod p+b\bmod p)\bmod p$
+		\item $(a \times b) \bmod p = (a \bmod p )( b \bmod p)\bmod p$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{快速幂}
+\begin{frame}{快速幂}
+	
+	$$a^{m+n}=a^m \times a^n$$
+	
+	\begin{itemize}
+		\item 对指数进行分治
+		\item 递归写法 - 两两一组
+		\item 非递归写法 - 按需取用
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{质数判断}
+\begin{frame}{质数判断}
+	
+	\begin{itemize}
+		\item $O(n)$
+		\item $O(\sqrt{n})$
+		\item $O(\frac{\sqrt{n}}{6})$ - $6k+1,6k+5$
+		\item $O(\log n)$ - Miller Rabin 算法
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+
+\end{document}
