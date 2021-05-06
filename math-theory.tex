@@ -41,7 +41,7 @@
 \newcommand{。}{．}
 
 \title{数论只会 GCD}
-\subtitle{“这个我也不会证，要么百度要么背结论吧”}
+\subtitle{“注意到”“显然可得”“易证”}
 
 \author{Jialin Rong}
 \institute{South China Normal University}
@@ -68,7 +68,7 @@
 \end{frame}
 
 \begin{frame}{声明}	
-	本演示文档可能充斥着各种不严谨甚至是错误的表述，课后请务必参考各种网上资料重新自学一遍有关内容（捂脸）。
+	本演示文档可能包含大量不严谨的表述。
 \end{frame}
 	
 % -----------------------------------------------------------------------------
@@ -137,41 +137,113 @@
 	
 	\begin{itemize}
 		\item $(a+b) \bmod p = (a\bmod p+b\bmod p)\bmod p$
+		\item $(a-b) \bmod p = (a\bmod p-b\bmod p + p)\bmod p$
 		\item $(a \times b) \bmod p = (a \bmod p )( b \bmod p)\bmod p$
+		\item 除法？
 	\end{itemize}
 	
 \end{frame}
 
 % -----------------------------------------------------------------------------
 
-\section{快速幂}
-\begin{frame}{快速幂}
-	
-	$$a^{m+n}=a^m \times a^n$$
+\section{（不用幻灯片讲的内容）}
+\begin{frame}{不用幻灯片讲的内容}
 	
 	\begin{itemize}
-		\item 对指数进行分治
-		\item 递归写法 - 两两一组
-		\item 非递归写法 - 按需取用
+		\item 快速幂
+		\item 质数判断
+		\item 筛法
+		\item 唯一分解定理
 	\end{itemize}
 	
 \end{frame}
 
 % -----------------------------------------------------------------------------
 
-\section{质数判断}
-\begin{frame}{质数判断}
+\section{GCD / ExGCD}
+\begin{frame}{GCD 性质}
 	
 	\begin{itemize}
-		\item $O(n)$
-		\item $O(\sqrt{n})$
-		\item $O(\frac{\sqrt{n}}{6})$ - $6k+1,6k+5$
-		\item $O(\log n)$ - Miller Rabin 算法
+		\item $(a,b)=(a,b+xa)$
+		\item $m>0,m(a_1,a_2,\cdots,a_k)=(ma_1,ma_2,\cdots,ma_k)$
+		\item $(\frac{a}{(a,b)},\frac{b}{(a,b)})=1$
+		\item $(a_1,a_2,a_3,\cdots,a_k)=((a_1,a_2),a_3,\cdots,a_k)$
+		\item $(m,a)=1$ 则 $(m,ab)=(m,b)$
+		\item $(a^k,b^k)=(a,b)^k$
+		\item $(m,a)=1$，若 $m\mid ab$，则 $m\mid b$
 	\end{itemize}
 	
 \end{frame}
 
 % -----------------------------------------------------------------------------
 
+\begin{frame}{GCD 求法}
+	
+	\begin{itemize}
+		\item $(a,b)=(a,b+xa)$
+		\item 令 $a=bq+r$
+		\item $(a,b)=(bq+r,b)=(r,b)=(a \bmod b,b)$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{ExGCD}
+	
+	给定 $a,b$，求解一组 $x,y$ 满足 $ax+by = \gcd(a, b)$
+	
+	\begin{itemize}
+		\item 设 $ax_1+by_1=\gcd(a,b)$
+		\item 设 $bx_2+(a\bmod b)y_2=\gcd(b,a\bmod b)$
+		\item 因为 $\gcd(a,b)=\gcd(b,a\bmod b)$
+		\item 所以 $ax_1+by_1=bx_2+(a\bmod b)y_2$
+		\item 因为 $a \bmod b=a-\lfloor \frac{a}{b}\rfloor \times b$
+		\item 所以 $ax_1+by_1=bx_2+(a-(\lfloor\frac{a}{b}\rfloor\times b))y_2$
+		\item 整理得 $ax_1+by_1=ay_2+bx_2-\lfloor\frac{a}{b}\rfloor\times by_2=ay_2+b(x_2-\lfloor\frac{a}{b}\rfloor y_2)$
+		\item 所以 $x_1=y_2,y_1=x_2-\lfloor\frac{a}{b}\rfloor y_2$
+	\end{itemize}
+	
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{逆元}
+\begin{frame}{定义}
+	
+	对于同余方程 $ax\equiv 1 \pmod m$，如果存在解 $x$，\\
+	
+	则称 $x$ 是 $a$ 在模 $m$ 意义下的逆元。
+	
+	~\\
+	
+	$a$ 模 $m$ 有逆元 $\Longleftrightarrow$ $a$ 和 $m$ 互质（为什么）
+	
+	~\\
+	
+	\begin{itemize}
+		\item ExGCD（模不一定是质数）
+		\item 费马小定理（模是质数）
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{ExGCD 求法}
+	
+	\begin{itemize}
+		\item $a \cdot inv(a) \equiv 1 \pmod m$
+		\item $a \cdot inv(a) + m \cdot k  = 1$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+% Work in progress
+
+% -----------------------------------------------------------------------------
 
 \end{document}
