@@ -41,7 +41,6 @@
 \newcommand{。}{．}
 
 \title{数论只会 GCD}
-\subtitle{“注意到”“显然可得”“易证”}
 
 \author{Jialin Rong}
 \institute{South China Normal University}
@@ -117,7 +116,7 @@
 
 % -----------------------------------------------------------------------------
 
-\begin{frame}{模的性质}
+\begin{frame}{整除的性质}
 	
 	\begin{itemize}
 		\item $a \equiv a \pmod m$
@@ -140,27 +139,18 @@
 		\item $(a-b) \bmod p = (a\bmod p-b\bmod p + p)\bmod p$
 		\item $(a \times b) \bmod p = (a \bmod p )( b \bmod p)\bmod p$
 		\item 除法？
+		\item $\frac{100}{50} \bmod 20 \neq \frac{100 \bmod 20}{50 \bmod 20} \bmod 20$
 	\end{itemize}
 	
 \end{frame}
 
 % -----------------------------------------------------------------------------
 
-\section{（不用幻灯片讲的内容）}
-\begin{frame}{不用幻灯片讲的内容}
-	
-	\begin{itemize}
-		\item 快速幂
-		\item 质数判断
-		\item 筛法
-		\item 唯一分解定理
-	\end{itemize}
-	
-\end{frame}
+\section{快速幂、质数判断、筛法、唯一分解定理}
 
 % -----------------------------------------------------------------------------
 
-\section{GCD / ExGCD}
+\section{GCD、ExGCD}
 \begin{frame}{GCD 性质}
 	
 	\begin{itemize}
@@ -236,13 +226,122 @@
 	\begin{itemize}
 		\item $a \cdot inv(a) \equiv 1 \pmod m$
 		\item $a \cdot inv(a) + m \cdot k  = 1$
+		\item $a \cdot inv(a) + m \cdot k  = \gcd(a,m)$
 	\end{itemize}
 	
 \end{frame}
 
 % -----------------------------------------------------------------------------
 
-% Work in progress
+\begin{frame}{技巧}
+	
+	\begin{itemize}
+		\item 求阶乘的逆元：$inv(i!)=inv((i+1)!) \times (i+1) \bmod p$
+		\item 线性求逆元：$inv(i)=(p-\lfloor\frac{p}{i}\rfloor) \times inv(p \bmod i) \bmod p$
+	\end{itemize}
+
+	~\\
+	
+	\begin{itemize}
+		\item $\lfloor\frac{p}{i}\rfloor \times i+ (p \bmod i) \equiv 0 \pmod p$
+		\item $-\lfloor\frac{p}{i}\rfloor \times i\equiv p \bmod i \pmod p$
+		\item $-\lfloor\frac{p}{i}\rfloor \times inv(p \bmod i) \equiv inv(i) \pmod p$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{欧拉函数、欧拉定理、费马小定理}
+\begin{frame}{同余类}
+	
+	通过一个整数模 $n$ 的余数，我们可以把所有整数分成 $n$ 类
+	
+	$$
+	\overline{r}_n=\{m\in \mathbb{Z} \mid mn+r\}
+	$$
+	
+	为模 $n$ 余 $r$ 的同余类
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{完全剩余系}
+	
+	从 $\overline{0}_n, \overline{1}_n, \overline{2}_n, \dots,\overline{(n-1)}_n$ 中各挑出一个数就组成了一个模 $n$ 的完全剩余系 $R_n$
+	
+	$$
+	R_n = \{r_0, r_1, \dots, r_{n-1}\}
+	$$
+	
+	其中 $r_0 \in \overline0_n, r_1 \in \overline1_n, r_2 \in \overline2_n, \dots, r_{n-1} \in \overline{(n-1)}_n$
+	
+	~\\
+	
+	$R_n = \{0, 1, \dots, n-1\}$ 为模 $n$ 的最小非负完全剩余系
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{缩剩余系}
+	
+	取一个模 $n$ 的完全剩余系 $R_n$，取出里面所有和 $n$ 互质的数，这些数组成一个模 $n$ 的缩剩余系（缩系），记为 $\Phi_n$
+	
+	$$
+	\Phi_n = \{c_1, c_2, \dots, c_{\varphi(n)} \}
+	$$
+	
+	~\\
+	
+	每一个模 $n$ 的缩剩余系有相同数量的元素（为什么）
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{欧拉函数}
+	
+	$\varphi(x)=$小于等于 $x$ 和 $x$ 互质的数的个数
+	
+	\begin{itemize}
+		\item $\varphi(1)=1$
+		\item $p$ 是质数，$\varphi(p)=p-1$
+		\item $p$ 是质数，$\varphi(p^k)=p^k-p^{k-1}$
+		\item 积性函数：$\gcd(m,n)=1,\varphi(mn)=\varphi(m)\times\varphi(n)$
+		\item $\varphi(n) = n \times \prod_{i = 1}^s{\dfrac{p_i - 1}{p_i}}$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{欧拉定理}
+	
+	如果正整数 $n$ 和整数 $a$年 互质，那么就有
+	
+	$$a^{\varphi(n)}\equiv 1 \pmod{n}$$
+	
+	\begin{itemize}
+		\item 反证法证明 $a\Phi_n$ 是一个模 $n$ 的缩系
+		\item $\prod_{i=1}^{\varphi(n)} c_i\equiv \prod_{i=1}^{\varphi(n)} ac_i = a^{\varphi(n)}\prod_{i=1}^{\varphi(n)} c_i \pmod{n}$
+		\item $\gcd\left(n, \prod_{i=1}^{\varphi(n)} c_i \right)=1$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{费马小定理}
+	
+	若 $p$ 为素数，$\gcd(a,p)=1$，则 $a^{p - 1} \equiv 1 \pmod{p}$。
+	
+	\begin{itemize}
+		\item $p \times p^{p-2} \equiv 1 \pmod{p}$
+	\end{itemize}
+	
+\end{frame}
 
 % -----------------------------------------------------------------------------
 
