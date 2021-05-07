@@ -40,7 +40,7 @@
 \catcode`\。=\active
 \newcommand{。}{．}
 
-\title{数论只会 GCD}
+\title{数论入门}
 
 \author{Jialin Rong}
 \institute{South China Normal University}
@@ -88,7 +88,7 @@
 
 \begin{frame}{带余除法}
 	
-	给定 $a,b$，一定存在唯一一对 $q,r$（都是整数哈）
+	给定 $a,b$，一定存在唯一一对 $q,r$（都是整数）
 	
 	\begin{itemize}
 		\item $a=bq+r$
@@ -104,8 +104,8 @@
 	都是整数...
 	
 	\begin{itemize}
-		\item $a\mid b$ 且 $b\mid c \Longleftrightarrow a\mid c$
-		\item $a\mid b$ 且 $a \mid c  \Longleftrightarrow$ 对任意 $x,y$ 有 $a\mid bx + cy$
+		\item $a\mid b$ 且 $b\mid c \Longrightarrow a\mid c$
+		\item $a\mid b$ 且 $a \mid c  \Longrightarrow$ 对任意 $x,y$ 有 $a\mid bx + cy$
 		\item $m \neq 0$，$a\mid b \Longleftrightarrow ma \mid mb$
 		\item $a\mid b$ 且 $b \mid a \Longrightarrow a=\pm b$ 
 		\item $b\neq 0$ 且 $a \mid b \Longrightarrow |a| \leq |b|$ 
@@ -319,7 +319,7 @@
 
 \begin{frame}{欧拉定理}
 	
-	如果正整数 $n$ 和整数 $a$年 互质，那么就有
+	如果正整数 $n$ 和整数 $a$ 互质，那么就有
 	
 	$$a^{\varphi(n)}\equiv 1 \pmod{n}$$
 	
@@ -334,11 +334,11 @@
 % -----------------------------------------------------------------------------
 
 \begin{frame}{费马小定理}
-	
+	   
 	若 $p$ 为素数，$\gcd(a,p)=1$，则 $a^{p - 1} \equiv 1 \pmod{p}$。
 	
 	\begin{itemize}
-		\item $p \times p^{p-2} \equiv 1 \pmod{p}$
+		\item $a \times a^{p-2} \equiv 1 \pmod{p}$
 	\end{itemize}
 	
 \end{frame}
