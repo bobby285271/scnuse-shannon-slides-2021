@@ -1,0 +1,239 @@
+\documentclass[10pt,aspectratio=43,serif]{beamer}		
+%\documentclass[handout,t]{beamer}
+
+\batchmode
+% \usepackage{pgfpages}
+% \pgfpagesuselayout{4 on 1}[letterpaper,landscape,border shrink=5mm]
+
+\usepackage{amsmath,amssymb,enumerate,epsfig,bbm,calc,color,ifthen,capt-of,multimedia,hyperref,ctex,listings}
+
+\usetheme{Berlin}
+
+\DefineNamedColor{named}{socodingblue}    {rgb}{0.296875,0.421875,0.69921875}
+
+\mode<presentation>
+\setbeamercolor*{palette primary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette secondary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette tertiary}{bg=socodingblue,fg=white}
+\setbeamercolor*{palette quaternary}{bg=socodingblue,fg=white}
+\setbeamercolor*{structure}{fg=socodingblue,bg=white}
+\setbeamercolor{frametitle}{bg=socodingblue,fg=white}
+\mode<all>
+
+\setbeamertemplate{headline}
+{%
+	\begin{beamercolorbox}[colsep=1.5pt]{upper separation line head}
+	\end{beamercolorbox}
+	\begin{beamercolorbox}{section in head/foot}
+		\vskip2pt\insertnavigation{\paperwidth}\vskip2pt
+	\end{beamercolorbox}%
+	\begin{beamercolorbox}[colsep=1.5pt]{lower separation line head}
+	\end{beamercolorbox}
+}
+
+\setbeamertemplate{footline}[frame number]{}
+
+%\setbeamertemplate{navigation symbols}{}
+
+\setbeamertemplate{footline}{}
+
+\catcode`\。=\active
+\newcommand{。}{．}
+
+\title{组合数学}
+
+\author{Jialin Rong}
+\institute{South China Normal University}
+\date{\today}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{目录}
+		\tableofcontents[currentsection]
+	\end{frame}
+}
+\beamerdefaultoverlayspecification{<+->}
+
+\begin{document}
+
+% -----------------------------------------------------------------------------
+	
+\frame{\titlepage}
+	
+%\section[目录]{}
+\begin{frame}{目录}	
+	\tableofcontents
+\end{frame}
+	
+% -----------------------------------------------------------------------------
+
+\section{组合数求法、卢卡斯定理}
+
+\section{卡特兰数}
+\begin{frame}{引入}
+	
+	\begin{block}{2019 欢送（迫害）CGY 杯}
+		CGY 管理着一个火车站的调度问题，这个车站有个中转站，可以停靠任意多节的火车，但末端封顶，驶入中转站的火车必须按照相反的顺序驶出。现在有 $n$ 节火车，编号为 $1-n$，这些火车按照 $1,2,3,…,n$ 的顺序进站。CGY 每天看着这些火车真的很无聊，他现在在想这些火车会有多少种出站顺序。
+	\end{block}
+		
+	\begin{itemize}
+		\item 合法的括号序列
+		\item 如果不要求所有位置都满足左括号不少于右括号 $C_{2n}^n$
+		\item 折线图反映左右括号数量差
+		\item 不合法的括号序列一定经过 $(x_0,-1)$
+		\item $(x_0,-1)$ 往后关于 $y=-1$ 翻转后一定到达 $(2n,-2)$
+		\item 既然是不合法那就可以随便走
+		\item $H_n=C_{2n}^n-C_{2n}^{n-1}=\frac{\binom{2n}{n}}{n+1}(n \geq 2, n \in \mathbf{N_{+}}) $
+		\item 换汤不换药：出栈顺序
+		\item https://www.jianshu.com/p/eccf0d23be38
+	\end{itemize}
+
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{更多的引入}
+
+	\begin{block}{OI Wiki 上的题}
+		 对角线不相交的情况下，将一个凸多边形区域分成三角形区域的方法数？
+	\end{block}
+	
+	\begin{itemize}
+		\item 凸多边形上的任意边都必定是其中一个三角形的边
+		\item 选择一个顶点
+		\item $i-1$ 边形和 $n-i$ 边形，$i=1,2,...,n$
+		\item $H_n = \begin{cases} \sum_{i=1}^{n} H_{i-1} H_{n-i} & n \geq 2, n \in \mathbf{N_{+}}\\ 1 & n = 0, 1 \end{cases}$
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{常见公式}
+	
+	$$
+	H_n = \binom{2n}{n} - \binom{2n}{n-1} = \frac{\binom{2n}{n}}{n+1}(n \geq 2, n \in \mathbf{N_{+}}) 
+	$$
+	
+	\pause
+	
+	$$
+	H_n = \begin{cases} \sum_{i=1}^{n} H_{i-1} H_{n-i} & n \geq 2, n \in \mathbf{N_{+}}\\ 1 & n = 0, 1 \end{cases} 
+	$$
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{容斥原理}
+
+\begin{frame}{引入}
+	
+	\begin{block}{2019 软件学院 AK 杯}
+		给定素数 $a,b,c,d$，求 $1$ 到 $n$ 中的整数中至少能整除这 $4$ 个元素中的一个的数有几个？
+	\end{block}
+	
+	求解任意大小的集合，或者计算复合事件的概率。
+	
+	~\\
+	
+	要计算几个集合并集的大小...
+	
+	\begin{itemize}
+		\item 将所有单个集合的大小计算出来
+		\item 减去所有两个集合相交的部分
+		\item 加回所有三个集合相交的部分
+		\item 减去所有四个集合相交的部分
+		\item ......
+		\item 依此类推，一直计算到所有集合相交的部分
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{公式}
+	
+	设 $U$ 中元素有 $n$ 种不同的属性，而第 $i$ 种属性称为 $P_i$，拥有属性 $P_i$ 的元素构成集合 $S_i$，那么
+	
+	$$
+	\left|\bigcup_{i=1}^{n}S_i\right|=\sum_{m=1}^n(-1)^{m-1}\sum_{a_i<a_{i+1} }\left|\bigcap_{i=1}^mS_{a_i}\right|
+	$$
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\begin{frame}{模板}
+	
+	\begin{itemize}
+		\item DFS
+		\item 二进制枚举
+	\end{itemize}
+
+	~\\
+	
+	\begin{itemize}
+		\item $n/2+n/3+n/5-n/(2\times 3)-n/(2\times 5)-n/(3\times 5)+n/(2 \times 3\times 5)...$
+		\item $n$ 除以奇数个数相乘的时候是加
+		\item $n$ 除以偶数个数相乘的时候是减
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{生成函数}
+
+\begin{frame}{引入}
+	
+	\begin{block}{答案显然...}
+		有 $1$ 克、$2$ 克的砝码各一枚。\\
+		能称出哪几种重量？每种重量各有几种可能方案？ 
+	\end{block}
+	
+	\begin{itemize}
+		\item (使用 1g || 不使用 1g) \&\& (使用 2g || 不使用 2g)
+		\item (使用1g \&\&使用2g) || (不使用1g \&\&使用2g) || (使用1g \&\&不使用2g) || (不使用1g \&\&不使用2g)
+		\item || $\textrightarrow$ 加法，\&\& $\textrightarrow$ 乘法
+		\item $x$ 代表砝码, $x$ 的次幂代表砝码的质量
+		\item $x^0$ 代表我们不选择当前砝码
+		\item $(x+1)(x^2+1)$
+		\item $(x \times x^2)+(1 \times x^2)+(x  \times 1)+ (1 \times 1)$
+		\item $x^3+x^2+x^1+1$ 系数
+		
+		
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\section{生成函数}
+
+\begin{frame}{引入}
+	
+	\begin{block}{答案显然...}
+		有 $1$ 克、$2$ 克的砝码各一枚。\\
+		能称出哪几种重量？每种重量各有几种可能方案？ 
+	\end{block}
+	
+	\begin{itemize}
+		\item (使用 1g || 不使用 1g) \&\& (使用 2g || 不使用 2g)
+		\item (使用1g \&\&使用2g) || (不使用1g \&\&使用2g) || (使用1g \&\&不使用2g) || (不使用1g \&\&不使用2g)
+		\item || $\textrightarrow$ 加法，\&\& $\textrightarrow$ 乘法
+		\item $x$ 代表砝码, $x$ 的次幂代表砝码的质量
+		\item $x^0$ 代表我们不选择当前砝码
+		\item $(x+1)(x^2+1)$
+		\item $(x \times x^2)+(1 \times x^2)+(x  \times 1)+ (1 \times 1)$
+		\item $x^3+x^2+x^1+1$ 系数
+		
+		
+	\end{itemize}
+	
+\end{frame}
+
+% -----------------------------------------------------------------------------
+
+\end{document}
